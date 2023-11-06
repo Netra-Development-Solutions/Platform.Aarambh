@@ -1,5 +1,5 @@
 {
-  "name": "client-token-manager-lib",
+  "name": "@nds-core/client-token-manager-lib",
   "version": "1.0.0",
   "main": "dist/index.js",
   "license": "MIT",
