@@ -11,7 +11,7 @@ pipeline {
         stage("Code") {
             steps {
                 echo "Cloning the code from GitHub"
-                git branch: "${github_branch}", url: "${github_url}"
+                git branch: "${github_branch}", url: "${git_branch}"
             }
         }
         stage("Install Dependencies") {
