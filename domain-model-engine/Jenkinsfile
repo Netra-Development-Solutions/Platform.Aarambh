@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        folder_path = "client-token-manager-lib"
+        folder_path = "domain-model-engine"
         github_url = "https://github.com/Netra-Development-Solutions/Platform.Aarambh"
         git_branch = "RELEASE"
     }

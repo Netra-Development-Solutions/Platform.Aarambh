@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 const jwt = require('@netra-development-solutions/utils.crypto.jsonwebtoken');
-const { errorResponse } = require('./Utils/Response');
+import NDSresponse from './Utils/Response';
 
 const authorizationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     interface AuthenticatedRequest extends Request {
@@ -11,7 +11,7 @@ const authorizationMiddleware = async (req: Request, res: Response, next: NextFu
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '');
         if (!token) {
-            return errorResponse(res, {}, 401, {}, 'Unauthorized');
+            return NDSresponse.errorResponse(res, {}, 401, {}, 'Unauthorized');
         }
 
         if (jwt.verify(token)) {
@@ -19,12 +19,12 @@ const authorizationMiddleware = async (req: Request, res: Response, next: NextFu
             (req as AuthenticatedRequest).user = decoded;
             (req as AuthenticatedRequest).token = token;
         } else {
-            return errorResponse(res, {}, 401, {}, 'Unauthorized');
+            return NDSresponse.errorResponse(res, {}, 401, {}, 'Unauthorized');
         }
 
         return next();
-    } catch (error) {
-        return errorResponse(res, error, 500, {}, 'Internal Server Error');
+    } catch (error: any) {
+        return NDSresponse.errorResponse(res, error, 500, {}, 'Internal Server Error');
     }
 };
 
