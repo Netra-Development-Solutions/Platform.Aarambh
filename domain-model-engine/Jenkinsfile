@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    environment {
+        folder_path = "domain-model-engine"
+        github_url = "https://github.com/Netra-Development-Solutions/Platform.Aarambh"
+        git_branch = "RELEASE"
+    }
+    
+    stages {
+        stage("Code") {
+            steps {
+                echo "Cloning the code from GitHub"
+                git branch: "${git_branch}", url: "${github_url}"
+            }
+        }
+        stage("Install Dependencies") {
+            steps {
+                dir("${folder_path}") {
+                    echo "Installing npm dependencies"
+                    bat "npm install"
+                }
+            }
+        }
+        stage("Build module") {
+            steps {
+                dir("${folder_path}") {
+                    echo "Building library"
+                    bat "npm run build"
+                }
+            }
+        }
+        stage("Run Tests") {
+            steps {
+                echo "Running tests"
+                // bat "npm test"
+            }
+        }
+        stage("Publishing package to NPM") {
+            steps {
+                dir("${folder_path}") {
+                    echo "Publishing package to NPM"
+                    withCredentials([string(credentialsId: 'nodejs_authentication_token', variable: 'NPM_TOKEN')]) {
+                        bat "npm config set //registry.npmjs.org/:_authToken=%NPM_TOKEN%"
+                        bat "npm publish --access=public"
+                    }
+                }
+            }
+        }
+    }
+}
